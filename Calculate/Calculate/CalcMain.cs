@@ -16,5 +16,12 @@ namespace Calculate
         {
             InitializeComponent();
         }
+
+        private void BtnCalc_Click(object sender, EventArgs e)
+        {
+            string expression = this.txtExe.Text;
+            string resultcalc = "calc...";
+            this.txtResult.Text = resultcalc;
+        }
     }
 }
