@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Calculate.BLL;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -20,7 +21,8 @@ namespace Calculate
         private void BtnCalc_Click(object sender, EventArgs e)
         {
             string expression = this.txtExe.Text;
-            string resultcalc = "calc...";
+            Calculator calc = new Calculator();
+            string resultcalc = calc.Calc(expression); ;
             this.txtResult.Text = resultcalc;
         }
     }

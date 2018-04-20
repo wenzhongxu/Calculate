@@ -46,6 +46,7 @@
     <Compile Include="Express\ExecutionItem.cs" />
     <Compile Include="Express\ExecutionQueue.cs" />
     <Compile Include="Express\ItemType.cs" />
+    <Compile Include="Express\OperatorStack.cs" />
     <Compile Include="Variant.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="VariantType.cs" />

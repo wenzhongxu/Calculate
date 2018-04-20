@@ -38,7 +38,7 @@ namespace Calculate.BLL
         {
             try
             {
-                var queue = new ExecutionQueue();
+                var queue = Parser.Execute(expr);
                 var calcResult = this.DoCalc(queue);
                 var result = this.GetVariant(calcResult);
 
