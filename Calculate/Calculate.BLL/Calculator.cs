@@ -1,6 +1,8 @@
-﻿using Calculate.DAL;
+﻿using Calculate.BLL.Func;
+using Calculate.DAL;
 using Calculate.DAL.Calc;
 using Calculate.DAL.Express;
+using Calculate.DAL.Func;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -100,7 +102,7 @@ namespace Calculate.BLL
                         this.DoOperator(executionItem.ItemOperator, executionQueue);
                         break;
                     case ItemType.itFunction:
-                        //this.doFunction(executionItem);
+                        this.DoFunction(executionItem);
                         break;
                     case ItemType.itVariable:
                         calcStack.Push(new Variant(executionItem.ItemString));
@@ -248,6 +250,52 @@ namespace Calculate.BLL
             }
 
             return new Variant(operand);
+        }
+
+        /// <summary>
+        /// 执行函数
+        /// </summary>
+        /// <param name="ei"></param>
+        private void DoFunction(ExecutionItem ei)
+        {
+            string functionName = ei.ItemString;
+
+            // 查找指定的函数
+            FuncManager funcManager = new FuncManager();
+            IFuncCalc func = funcManager.Func(functionName);
+
+            // 当找不到对应的函数实现时，原计算函数的各个参数，现抛出异常
+            if (func == null)
+            {
+                throw new CalcException(string.Format("{0}函数尚未支持", functionName));
+            }
+
+            // 组织函数的参数清单
+            var fd = new FunctionDesc(functionName);
+            foreach (string param in ei.ItemParams)
+            {
+                fd.Add(new Variant(param));
+            }
+
+            // 执行扩展函数
+            try
+            {
+                Variant funcReturnValue = null;
+
+                funcReturnValue = func.Execute(fd, this);
+                
+                if (funcReturnValue.VarType != VariantType.vtUnknow)
+                {
+                    calcStack.Push(funcReturnValue);
+                }
+
+            }
+            catch (Exception e)
+            {
+                string message = "函数调用错误 " + ei.ItemString;
+
+                throw new CalcException(message, e);
+            }
         }
 
         #endregion
