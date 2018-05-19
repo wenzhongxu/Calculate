@@ -143,22 +143,33 @@ namespace Calculate.BLL
 
             try
             {
+                string str = string.Empty;
                 Variant variant = null;
                 Variant varleft = null;
                 Variant varright = null;
                 Variant operandValue = null;
                 switch (enmOperators)
                 {
-                    case EnmOperators.Not:
-                        variant = calcStack.Pop();
+                    case EnmOperators.Not: // 逻辑非处理
+                        str = calcStack.Pop();
+                        variant = this.GetVariant(str);
 
-                        // 逻辑非处理
+                        double dv = 0;
+                        if (double.TryParse(variant, out dv))
+                        {
+                            operandValue = new Variant(dv);
+                        }
+                        else
+                        {
+                            operandValue = -new Variant(bool.Parse(variant));
+                        }
+
                         calcStack.Push(operandValue);
                         break;
-                    case EnmOperators.UnMinus:
-                        variant = calcStack.Pop();
-
-                        // 取反处理
+                    case EnmOperators.UnMinus: // 取反处理
+                        str = calcStack.Pop();
+                        variant = this.GetVariant(str);
+                        operandValue = -this.GetVariant(variant);
                         calcStack.Push(operandValue);
                         break;
                     case EnmOperators.UnPlus:
